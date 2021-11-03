@@ -3,16 +3,35 @@ import random
 from threading import Thread
 from datetime import datetime
 from colorama import Fore, init, Back
+import sys
+import signal
+
+MESSAGE_SIZE = 1024
+
+sock = None
+
+
+def sigterm_handler(_signum, _frame) -> None:
+    sys.exit(1)
+
+
+def clean_up():
+    global sock
+
+    # close the socket
+    sock.close()
 
 
 def listen_for_messages():
+    global sock
+
     while True:
-        message = sock.recv(1024).decode()
+        message = sock.recv(MESSAGE_SIZE).decode()
         print("\n" + message)
 
 
-# このファイルを直接実行したときは、以下の関数を呼び出します
-if __name__ == "__main__":
+def run_server():
+    global sock
 
     # init colors
     init()
@@ -63,5 +82,23 @@ if __name__ == "__main__":
         # finally, send the message
         sock.send(to_send.encode())
 
-    # close the socket
-    sock.close()
+
+def main():
+    # 強制終了のシグナルを受け取ったら、強制終了するようにします
+    signal.signal(signal.SIGTERM, sigterm_handler)
+
+    try:
+        run_server()
+    finally:
+        # 強制終了のシグナルを無視するようにしてから、クリーンアップ処理へ進みます
+        signal.signal(signal.SIGTERM, signal.SIG_IGN)
+        signal.signal(signal.SIGINT, signal.SIG_IGN)
+        clean_up()
+        # 強制終了のシグナルを有効に戻します
+        signal.signal(signal.SIGTERM, signal.SIG_DFL)
+        signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+
+# このファイルを直接実行したときは、以下の関数を呼び出します
+if __name__ == "__main__":
+    sys.exit(main())

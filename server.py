@@ -10,7 +10,7 @@ separator_token = "<SEP>"  # we will use this to separate the client name & mess
 client_sockets = None
 
 
-def sigterm_handler(signum, frame) -> None:
+def sigterm_handler(_signum, _frame) -> None:
     sys.exit(1)
 
 
