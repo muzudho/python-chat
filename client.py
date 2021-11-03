@@ -55,8 +55,8 @@ def run_server():
 
     # initialize TCP socket
     sock = socket.socket()
-    print(f"[*] Connecting to {SERVER_HOST}:{SERVER_PORT}...")
     # connect to the server
+    print(f"[*] Connecting to {SERVER_HOST}:{SERVER_PORT}...")
     sock.connect((SERVER_HOST, SERVER_PORT))
     print("[+] Connected.")
 
