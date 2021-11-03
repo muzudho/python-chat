@@ -9,3 +9,15 @@ Pythonでチャットアプリケーション開発の練習（＾～＾）
 ```shell
 pip3 install colorama
 ```
+
+## Run a server
+
+```shell
+server.py
+```
+
+## Run some clients
+
+```shell
+client.py
+```
